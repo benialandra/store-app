@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import CheckoutModal from '@/components/CheckoutModal'
-import { ArrowRight, Code, Shield, Zap, Eye, ShoppingCart, Search, Loader2 } from 'lucide-react'
+import { ArrowRight, Code, Shield, Zap, Eye, ShoppingCart, Search, Loader2, ChevronDown } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageProvider'
 import { FALLBACK_PRODUCTS } from '@/lib/products'
 import type { PublicProduct } from '@/lib/types'
@@ -98,7 +98,7 @@ export default function Home() {
         <div 
           className="absolute inset-0 z-0 w-[110%] h-[110%] -top-[5%] -left-[5%] bg-cover bg-center transition-opacity duration-700"
           style={{ 
-            backgroundImage: 'url(https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop)',
+            backgroundImage: 'url(https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2070&auto=format&fit=crop)',
             transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -30}px) scale(${isHoveringHero ? 1.05 : 1})`,
             transitionProperty: 'opacity, transform',
             transitionDuration: isHoveringHero ? '700ms, 0s' : '700ms, 700ms',
@@ -152,6 +152,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About Section */}
+      <section className="py-24 bg-[var(--background)]">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            <div className="w-full lg:w-1/2 space-y-6">
+              <h2 className="text-4xl font-bold tracking-tight">{t('about.title')}</h2>
+              <p className="text-xl text-[var(--foreground)] font-medium">{t('about.subtitle')}</p>
+              <div className="space-y-4 text-[var(--muted)] leading-relaxed text-lg">
+                <p>{t('about.desc1')}</p>
+                <p>{t('about.desc2')}</p>
+              </div>
+              <div className="grid grid-cols-3 gap-6 pt-8 border-t border-[var(--border)] mt-8">
+                <div>
+                  <h4 className="text-3xl font-bold mb-1">10k+</h4>
+                  <p className="text-sm text-[var(--muted)]">{t('about.stats.users')}</p>
+                </div>
+                <div>
+                  <h4 className="text-3xl font-bold mb-1">50+</h4>
+                  <p className="text-sm text-[var(--muted)]">{t('about.stats.products')}</p>
+                </div>
+                <div>
+                  <h4 className="text-3xl font-bold mb-1">100k+</h4>
+                  <p className="text-sm text-[var(--muted)]">{t('about.stats.downloads')}</p>
+                </div>
+              </div>
+            </div>
+            <div className="w-full lg:w-1/2 relative">
+              <div className="aspect-square lg:aspect-[4/3] rounded-3xl overflow-hidden border border-[var(--border)] relative shadow-lg">
+                <div 
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
+                  style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop)' }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-8 left-8 right-8 text-white">
+                  <p className="font-bold text-2xl mb-1">benialandra</p>
+                  <p className="text-white/80 font-medium">Empowering developers & designers worldwide</p>
+                </div>
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -z-10 -top-8 -right-8 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -z-10 -bottom-8 -left-8 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Products */}
       <section className="py-24 bg-zinc-50 dark:bg-zinc-900/20" id="products">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -162,20 +208,21 @@ export default function Home() {
 
           {/* Filters */}
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-12">
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => handleCategory(cat)}
-                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                    selectedCategory === cat
-                      ? 'bg-[var(--foreground)] text-[var(--background)] shadow-md scale-105'
-                      : 'bg-white dark:bg-zinc-800 border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--foreground)]'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+            <div className="relative w-full lg:w-64">
+              <select
+                value={selectedCategory}
+                onChange={(e) => handleCategory(e.target.value)}
+                className="w-full appearance-none px-6 py-3 rounded-full border border-[var(--border)] bg-white dark:bg-zinc-800 text-[var(--foreground)] font-medium focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] transition-shadow shadow-sm cursor-pointer"
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--muted)]">
+                <ChevronDown className="w-5 h-5" />
+              </div>
             </div>
             <div className="relative w-full lg:w-96">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted)]" />

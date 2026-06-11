@@ -1,13 +1,15 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { ShoppingBag, Search, Menu, Moon, Sun, Globe } from 'lucide-react'
+import { ShoppingBag, Menu, Moon, Sun, Globe, X } from 'lucide-react'
 import { useTheme } from '@/context/ThemeProvider'
 import { useLanguage } from '@/context/LanguageProvider'
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme()
   const { locale, toggleLocale, t } = useLanguage()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[var(--border)] bg-white/80 dark:bg-black/80 backdrop-blur-md">
@@ -47,11 +49,50 @@ export default function Navbar() {
           <Link href="/history" className="hidden md:flex items-center justify-center px-4 py-2 text-sm font-medium rounded-full border border-[var(--border)] hover:bg-[var(--border)] transition-colors">
             {t('nav.access_library')}
           </Link>
-          <button className="md:hidden p-2 text-[var(--foreground)]">
-            <Menu className="w-5 h-5" />
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-[var(--foreground)]"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-[var(--border)] bg-white dark:bg-black px-4 py-6 space-y-4 shadow-lg animate-in slide-in-from-top-2">
+          <nav className="flex flex-col gap-4 text-base font-medium">
+            <Link 
+              href="/" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-[var(--brand)] transition-colors p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900"
+            >
+              {t('nav.marketplace')}
+            </Link>
+            <Link 
+              href="/track" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-[var(--brand)] transition-colors p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900"
+            >
+              {t('nav.track')}
+            </Link>
+            <Link 
+              href="/history" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="hover:text-[var(--brand)] transition-colors p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900"
+            >
+              {t('nav.library')}
+            </Link>
+            <Link 
+              href="/history" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="mt-4 flex items-center justify-center px-4 py-3 text-sm font-medium rounded-xl border border-[var(--border)] bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 transition-opacity"
+            >
+              {t('nav.access_library')}
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
