@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/TypeScript-Strict-3178c6?style=for-the-badge&logo=typescript&logoColor=white" />
 </p>
 
-# 🛒 DevStore
+# 🛒 benialandra
 
 > **Premium digital marketplace** untuk menjual source code, template, dan script. Dibangun dengan arsitektur modern, sistem pembayaran terintegrasi, dan keamanan berlapis.
 
@@ -184,7 +184,7 @@ Fitur admin:
 
 ## 📜 License
 
-MIT © DevStore
+MIT © benialandra
 
 ---
 

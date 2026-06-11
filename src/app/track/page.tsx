@@ -16,10 +16,10 @@ interface OrderResult {
 }
 
 const statusConfig = {
-  pending: { label: 'Menunggu Pembayaran', icon: Clock, color: 'text-amber-600 bg-amber-100 dark:bg-amber-900/30 border-amber-200 dark:border-amber-500/20' },
-  success: { label: 'Berhasil', icon: CheckCircle, color: 'text-green-600 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-500/20' },
-  failed: { label: 'Gagal', icon: XCircle, color: 'text-red-600 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-500/20' },
-  expired: { label: 'Kedaluwarsa', icon: XCircle, color: 'text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-500/20' },
+  pending: { labelKey: 'track.status.pending', icon: Clock, color: 'text-amber-600 bg-amber-100 dark:bg-amber-900/30 border-amber-200 dark:border-amber-500/20' },
+  success: { labelKey: 'track.status.success', icon: CheckCircle, color: 'text-green-600 bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-500/20' },
+  failed: { labelKey: 'track.status.failed', icon: XCircle, color: 'text-red-600 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-500/20' },
+  expired: { labelKey: 'track.status.expired', icon: XCircle, color: 'text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 border-zinc-200 dark:border-zinc-500/20' },
 }
 
 export default function TrackOrder() {
@@ -45,12 +45,12 @@ export default function TrackOrder() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || 'Terjadi kesalahan.')
+        setError(data.error || t('track.err.unknown'))
       } else {
         setOrder(data)
       }
     } catch {
-      setError('Gagal menghubungi server.')
+      setError(t('track.err.network'))
     } finally {
       setIsLoading(false)
     }
@@ -113,7 +113,7 @@ export default function TrackOrder() {
               return (
                 <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border ${cfg.color} mb-6`}>
                   <Icon className="w-4 h-4" />
-                  {cfg.label}
+                  {t(cfg.labelKey)}
                 </div>
               )
             })()}
@@ -127,28 +127,28 @@ export default function TrackOrder() {
                 />
               )}
               <div>
-                <h3 className="font-bold text-lg">{order.product?.title || 'Produk'}</h3>
+                <h3 className="font-bold text-lg">{order.product?.title || t('track.res.product')}</h3>
                 <p className="text-[var(--muted)] text-sm">Rp {order.amount.toLocaleString('id-ID')}</p>
               </div>
             </div>
 
             {/* Details */}
             <div className="space-y-3 text-sm border-t border-[var(--border)] pt-6">
-              <div className="flex justify-between"><span className="text-[var(--muted)]">Kode Akses</span><span className="font-mono font-bold">{order.order_code}</span></div>
-              <div className="flex justify-between"><span className="text-[var(--muted)]">Email</span><span>{order.email}</span></div>
-              <div className="flex justify-between"><span className="text-[var(--muted)]">Tanggal</span><span>{new Date(order.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
+              <div className="flex justify-between"><span className="text-[var(--muted)]">{t('track.res.code')}</span><span className="font-mono font-bold">{order.order_code}</span></div>
+              <div className="flex justify-between"><span className="text-[var(--muted)]">{t('track.res.email')}</span><span>{order.email}</span></div>
+              <div className="flex justify-between"><span className="text-[var(--muted)]">{t('track.res.date')}</span><span>{new Date(order.created_at).toLocaleDateString(t('locale') === 'en' ? 'en-US' : 'id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
             </div>
 
             {/* Download Button */}
             {order.status === 'success' && order.download_available && (
               <div className="mt-6 pt-6 border-t border-[var(--border)]">
-                <p className="text-sm text-green-600 dark:text-green-500 mb-3 font-medium">✅ Link download Anda masih aktif. Cek email Anda atau klik tombol di bawah.</p>
+                <p className="text-sm text-green-600 dark:text-green-500 mb-3 font-medium">{t('track.res.active')}</p>
               </div>
             )}
 
             {order.status === 'success' && order.download_expired && (
               <div className="mt-6 pt-6 border-t border-[var(--border)]">
-                <p className="text-sm text-amber-600 dark:text-amber-500 mb-3">⚠️ Link download Anda sudah kedaluwarsa atau sudah digunakan. Hubungi admin untuk mendapatkan link baru.</p>
+                <p className="text-sm text-amber-600 dark:text-amber-500 mb-3">{t('track.res.expired_msg')}</p>
               </div>
             )}
           </div>

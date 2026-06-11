@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: 'Product Not Found' }
 
   return {
-    title: `${product.title} | DevStore`,
+    title: `${product.title} | benialandra`,
     description: product.description,
     openGraph: {
       title: product.title,

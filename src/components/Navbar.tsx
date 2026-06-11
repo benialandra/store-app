@@ -17,7 +17,7 @@ export default function Navbar() {
             <div className="bg-[var(--brand)] text-[var(--brand-foreground)] p-1.5 rounded-lg">
               <ShoppingBag className="w-5 h-5" />
             </div>
-            <span>DevStore</span>
+            <span>benialandra</span>
           </Link>
           <nav className="hidden md:flex gap-6 text-sm font-medium text-[var(--muted)]">
             <Link href="/" className="hover:text-[var(--foreground)] transition-colors">{t('nav.marketplace')}</Link>

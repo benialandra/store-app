@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
-  title: "DevStore | Premium Code Scripts & Templates",
+  title: "benialandra | Premium Code Scripts & Templates",
   description: "Supercharge your workflow with high-quality, production-ready code.",
 };
 

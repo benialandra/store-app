@@ -28,7 +28,7 @@ export default function AdminPage() {
   // Simple password check (production → gunakan Supabase Auth)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    const adminPw = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'devstore2025'
+    const adminPw = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'benialandra2025'
     if (password === adminPw) {
       setIsAuthed(true)
       localStorage.setItem('admin_auth', 'true')

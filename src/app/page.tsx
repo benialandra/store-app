@@ -18,10 +18,15 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [currentPage, setCurrentPage] = useState(1)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [isHoveringHero, setIsHoveringHero] = useState(false)
 
   // Fetch produk dari database
   useEffect(() => {
-    fetch('/api/products')
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 3000) // 3 detik maksimal
+
+    fetch('/api/products', { signal: controller.signal })
       .then(res => res.json())
       .then(data => {
         if (data.products && data.products.length > 0) {
@@ -29,8 +34,15 @@ export default function Home() {
         }
         // Jika kosong atau error, tetap gunakan FALLBACK
       })
-      .catch(() => {})
-      .finally(() => setIsLoading(false))
+      .catch((err) => {
+        console.warn('Fetch timeout or error, using fallback products:', err)
+      })
+      .finally(() => {
+        clearTimeout(timeoutId)
+        setIsLoading(false)
+      })
+      
+    return () => clearTimeout(timeoutId)
   }, [])
 
   // Daftar kategori unik dari data produk
@@ -65,13 +77,38 @@ export default function Home() {
     setSelectedCategory(cat)
     setCurrentPage(1)
   }
+  const handleHeroMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isHoveringHero) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    setMousePos({ x, y })
+  }
 
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* Hero */}
-      <section className="relative overflow-hidden pt-32 pb-24 lg:pt-48 lg:pb-32">
-        <div className="absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(100%_50%_at_50%_0%,rgba(120,115,106,0.1)_0,transparent_50%)]" />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section 
+        className="relative overflow-hidden pt-32 pb-24 lg:pt-48 lg:pb-32 group"
+        onMouseMove={handleHeroMouseMove}
+        onMouseEnter={() => setIsHoveringHero(true)}
+        onMouseLeave={() => { setIsHoveringHero(false); setMousePos({ x: 0, y: 0 }) }}
+      >
+        {/* Animated Tech Background */}
+        <div 
+          className="absolute inset-0 -z-20 w-[110%] h-[110%] -top-[5%] -left-[5%] bg-cover bg-center transition-opacity duration-700"
+          style={{ 
+            backgroundImage: 'url(https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop)',
+            transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -30}px) scale(${isHoveringHero ? 1.05 : 1})`,
+            transitionProperty: 'opacity, transform',
+            transitionDuration: isHoveringHero ? '700ms, 0s' : '700ms, 700ms',
+            opacity: isHoveringHero ? 0.2 : 0.4
+          }}
+        />
+        {/* Gradient Overlay for Text Readability */}
+        <div className="absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(100%_50%_at_50%_0%,rgba(120,115,106,0.3)_0,var(--background)_80%)]" />
+        
+        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border)] bg-white/50 dark:bg-black/50 backdrop-blur-sm text-sm text-[var(--muted)] mb-8 animate-fade-up">
             <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
             {t('hero.badge')}

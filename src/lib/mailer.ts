@@ -20,9 +20,9 @@ export async function sendEmail(
   const html = generateEmailTemplate(orderId, productName, price, actionUrl, type);
   
   const mailOptions = {
-    from: `"DevStore Premium" <${process.env.EMAIL_USER}>`,
+    from: `"benialandra Premium" <${process.env.EMAIL_USER}>`,
     to,
-    subject: type === 'invoice' ? 'Menunggu Pembayaran - DevStore' : 'Pembayaran Berhasil! - DevStore',
+    subject: type === 'invoice' ? 'Menunggu Pembayaran - benialandra' : 'Pembayaran Berhasil! - benialandra',
     html
   };
 
