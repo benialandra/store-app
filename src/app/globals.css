@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   --font-sans: var(--font-sans);
@@ -20,15 +21,13 @@
     --border: #e4e4e7;
   }
   
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #09090b;
-      --foreground: #fafafa;
-      --brand: #fafafa;
-      --brand-foreground: #09090b;
-      --muted: #a1a1aa;
-      --border: #27272a;
-    }
+  .dark {
+    --background: #09090b;
+    --foreground: #fafafa;
+    --brand: #fafafa;
+    --brand-foreground: #09090b;
+    --muted: #a1a1aa;
+    --border: #27272a;
   }
 
   * {
@@ -56,7 +55,7 @@
   }
 
   .animate-fade-left {
-    animation: fadeLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: fadeLeft 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
   }
   
@@ -66,7 +65,7 @@
   }
 
   .animate-fade-right {
-    animation: fadeRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: fadeRight 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
   }
   

@@ -96,19 +96,19 @@ export default function Home() {
       >
         {/* Animated Tech Background */}
         <div 
-          className="absolute inset-0 -z-20 w-[110%] h-[110%] -top-[5%] -left-[5%] bg-cover bg-center transition-opacity duration-700"
+          className="absolute inset-0 z-0 w-[110%] h-[110%] -top-[5%] -left-[5%] bg-cover bg-center transition-opacity duration-700"
           style={{ 
             backgroundImage: 'url(https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop)',
             transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -30}px) scale(${isHoveringHero ? 1.05 : 1})`,
             transitionProperty: 'opacity, transform',
             transitionDuration: isHoveringHero ? '700ms, 0s' : '700ms, 700ms',
-            opacity: isHoveringHero ? 0.2 : 0.4
+            opacity: isHoveringHero ? 0.35 : 0.6
           }}
         />
         {/* Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 -z-10 bg-[var(--background)]/70 dark:bg-[#09090b]/80 backdrop-blur-[1px] pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-[var(--background)]/60 dark:bg-[#09090b]/70 backdrop-blur-[1px] pointer-events-none" />
         
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="container relative z-20 mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border)] bg-white/50 dark:bg-black/50 backdrop-blur-sm text-sm text-[var(--muted)] mb-8 animate-fade-up">
             <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
             {t('hero.badge')}

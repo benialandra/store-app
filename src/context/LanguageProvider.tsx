@@ -34,6 +34,15 @@ const translations: Record<Locale, Record<string, string>> = {
     'feat.onetime': 'Bayar Sekali',
     'feat.onetime_desc': 'Tanpa langganan. Bayar sekali, gunakan source code selamanya.',
 
+    // About
+    'about.title': 'Tentang Kami',
+    'about.subtitle': 'Membangun Ekosistem Digital Masa Depan',
+    'about.desc1': 'Kami adalah platform terdepan yang berdedikasi untuk memberdayakan pengembang dan desainer. Kami menyediakan source code premium, template desain, dan alat siap pakai yang mempercepat siklus pengembangan produk Anda.',
+    'about.desc2': 'Fokus utama kami adalah pada kualitas, keamanan, dan desain modern. Setiap produk yang kami tawarkan telah melewati uji standar industri yang ketat sehingga Anda dapat membangun aplikasi kelas dunia dengan percaya diri.',
+    'about.stats.users': 'Pengguna Aktif',
+    'about.stats.products': 'Produk Premium',
+    'about.stats.downloads': 'Total Unduhan',
+
     // Products
     'products.title': 'Rilis Terbaru',
     'products.subtitle': 'Template premium untuk mempercepat project Anda.',
