@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import ProductDetailClient from './ProductDetailClient'
+import ProductDetailClient from '@/components/ProductDetailClient'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -41,7 +41,7 @@ export default async function ProductPage({ params }: Props) {
 
   if (!product) notFound()
 
-  // Increment views (fire & forget, tidak blocking render)
+  // Increment views (fire & forget)
   supabase
     .from('products')
     .update({ views: (product.views || 0) + 1 })

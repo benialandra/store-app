@@ -185,12 +185,20 @@ export default function Home() {
                     </div>
                     <div className="flex items-center justify-between pt-5 border-t border-[var(--border)] mt-auto">
                       <span className="text-xl font-semibold">Rp {product.price.toLocaleString('id-ID')}</span>
-                      <button
-                        onClick={() => setSelectedProduct(product)}
-                        className="px-5 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-sm font-medium hover:scale-105 transition-transform shadow-md"
-                      >
-                        Purchase
-                      </button>
+                      <div className="flex gap-2">
+                        <Link
+                          href={`/product/${product.slug}`}
+                          className="px-5 py-2.5 border border-[var(--border)] rounded-xl text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                        >
+                          Preview
+                        </Link>
+                        <button
+                          onClick={() => setSelectedProduct(product)}
+                          className="px-5 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-sm font-medium hover:scale-105 transition-transform shadow-md"
+                        >
+                          Purchase
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
