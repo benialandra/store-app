@@ -134,6 +134,15 @@ const translations: Record<Locale, Record<string, string>> = {
     'feat.onetime': 'One-Time Payment',
     'feat.onetime_desc': 'No subscriptions. Pay once and own the source code forever.',
 
+    // About
+    'about.title': 'About Us',
+    'about.subtitle': 'Building the Future Digital Ecosystem',
+    'about.desc1': 'We are a leading platform dedicated to empowering developers and designers. We provide premium source code, design templates, and ready-to-use tools that accelerate your product development cycle.',
+    'about.desc2': 'Our primary focus is on quality, security, and modern design. Every product we offer has passed rigorous industry standards testing so you can build world-class applications with confidence.',
+    'about.stats.users': 'Active Users',
+    'about.stats.products': 'Premium Products',
+    'about.stats.downloads': 'Total Downloads',
+
     // Products
     'products.title': 'Latest Releases',
     'products.subtitle': 'Premium templates to accelerate your next project.',
