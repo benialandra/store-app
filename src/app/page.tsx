@@ -4,12 +4,14 @@ import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import CheckoutModal from '@/components/CheckoutModal'
 import { ArrowRight, Code, Shield, Zap, Eye, ShoppingCart, Search, Loader2 } from 'lucide-react'
+import { useLanguage } from '@/context/LanguageProvider'
 import { FALLBACK_PRODUCTS } from '@/lib/products'
 import type { PublicProduct } from '@/lib/types'
 
 const ITEMS_PER_PAGE = 9
 
 export default function Home() {
+  const { t } = useLanguage()
   const [selectedProduct, setSelectedProduct] = useState<PublicProduct | null>(null)
   const [products, setProducts] = useState<PublicProduct[]>(FALLBACK_PRODUCTS)
   const [isLoading, setIsLoading] = useState(true)
@@ -72,21 +74,21 @@ export default function Home() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border)] bg-white/50 dark:bg-black/50 backdrop-blur-sm text-sm text-[var(--muted)] mb-8 animate-fade-up">
             <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-            New templates added weekly
+            {t('hero.badge')}
           </div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6 animate-fade-up">
-            Ship Faster With<br />
-            <span className="font-serif italic font-normal text-[var(--muted)]">Premium Code</span>
+            {t('hero.title_1')}<br />
+            <span className="font-serif italic font-normal text-[var(--muted)]">{t('hero.title_2')}</span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-[var(--muted)] mb-10 animate-fade-up leading-relaxed">
-            Supercharge your workflow with high-quality, production-ready source code. One-time payment, instant secure download.
+            {t('hero.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up">
             <a href="#products" className="w-full sm:w-auto px-8 py-4 bg-[var(--foreground)] text-[var(--background)] rounded-full font-medium flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-xl">
-              Explore Templates <ArrowRight className="w-4 h-4" />
+              {t('hero.explore')} <ArrowRight className="w-4 h-4" />
             </a>
             <Link href="/track" className="w-full sm:w-auto px-8 py-4 border border-[var(--border)] rounded-full font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-              Track My Order
+              {t('hero.track')}
             </Link>
           </div>
         </div>
@@ -97,9 +99,9 @@ export default function Home() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
             {[
-              { icon: Code, title: 'Production Ready', desc: 'Clean, well-documented code that follows industry best practices.' },
-              { icon: Zap, title: 'Instant Access', desc: 'Get immediate secure download link via email after payment.' },
-              { icon: Shield, title: 'One-Time Payment', desc: 'No subscriptions. Pay once and own the source code forever.' },
+              { icon: Code, title: t('feat.ready'), desc: t('feat.ready_desc') },
+              { icon: Zap, title: t('feat.instant'), desc: t('feat.instant_desc') },
+              { icon: Shield, title: t('feat.onetime'), desc: t('feat.onetime_desc') },
             ].map(f => (
               <div key={f.title} className="flex flex-col items-center md:items-start gap-4">
                 <div className="p-4 rounded-2xl bg-white dark:bg-zinc-800 border border-[var(--border)] shadow-sm">
@@ -117,8 +119,8 @@ export default function Home() {
       <section className="py-24 bg-zinc-50 dark:bg-zinc-900/20" id="products">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold tracking-tight mb-4">Latest Releases</h2>
-            <p className="text-[var(--muted)] text-lg">Premium templates to accelerate your next project.</p>
+            <h2 className="text-4xl font-bold tracking-tight mb-4">{t('products.title')}</h2>
+            <p className="text-[var(--muted)] text-lg">{t('products.subtitle')}</p>
           </div>
 
           {/* Filters */}
@@ -142,7 +144,7 @@ export default function Home() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted)]" />
               <input
                 type="text"
-                placeholder="Search templates, scripts..."
+                placeholder={t('products.search')}
                 value={searchQuery}
                 onChange={handleSearch}
                 className="w-full pl-12 pr-4 py-3 rounded-full border border-[var(--border)] bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] transition-shadow shadow-sm"
@@ -190,13 +192,13 @@ export default function Home() {
                           href={`/product/${product.slug}`}
                           className="px-5 py-2.5 border border-[var(--border)] rounded-xl text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
                         >
-                          Preview
+                          {t('products.preview')}
                         </Link>
                         <button
                           onClick={() => setSelectedProduct(product)}
                           className="px-5 py-2.5 bg-[var(--foreground)] text-[var(--background)] rounded-xl text-sm font-medium hover:scale-105 transition-transform shadow-md"
                         >
-                          Purchase
+                          {t('products.purchase')}
                         </button>
                       </div>
                     </div>
@@ -206,12 +208,12 @@ export default function Home() {
             </div>
           ) : (
             <div className="text-center py-20">
-              <p className="text-xl text-[var(--muted)]">Tidak ada produk yang cocok dengan pencarian Anda.</p>
+              <p className="text-xl text-[var(--muted)]">{t('products.empty')}</p>
               <button
                 onClick={() => { setSearchQuery(''); setSelectedCategory('All') }}
                 className="mt-4 px-6 py-2 border border-[var(--border)] rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
-                Reset Filter
+                {t('products.reset')}
               </button>
             </div>
           )}
@@ -224,7 +226,7 @@ export default function Home() {
                 disabled={currentPage === 1}
                 className="px-4 py-2 border border-[var(--border)] rounded-xl text-sm font-medium disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
-                Previous
+                {t('products.prev')}
               </button>
               {Array.from({ length: totalPages }).map((_, i) => (
                 <button
@@ -244,7 +246,7 @@ export default function Home() {
                 disabled={currentPage === totalPages}
                 className="px-4 py-2 border border-[var(--border)] rounded-xl text-sm font-medium disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
-                Next
+                {t('products.next')}
               </button>
             </div>
           )}

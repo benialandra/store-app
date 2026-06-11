@@ -2,6 +2,7 @@
 
 import { Search, Lock, Package, Clock, CheckCircle, XCircle, Download, Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { useLanguage } from '@/context/LanguageProvider'
 
 interface OrderResult {
   order_code: string
@@ -26,6 +27,7 @@ export default function TrackOrder() {
   const [isLoading, setIsLoading] = useState(false)
   const [order, setOrder] = useState<OrderResult | null>(null)
   const [error, setError] = useState('')
+  const { t } = useLanguage()
 
   const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -61,9 +63,9 @@ export default function TrackOrder() {
           <div className="inline-flex items-center justify-center p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 mb-6">
             <Lock className="w-8 h-8" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Lacak Pesanan</h1>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">{t('track.title')}</h1>
           <p className="text-[var(--muted)] text-lg">
-            Masukkan <strong>Kode Akses</strong> yang Anda terima setelah pembayaran berhasil.
+            {t('track.subtitle')}
           </p>
         </div>
 
@@ -71,7 +73,7 @@ export default function TrackOrder() {
         <div className="bg-white dark:bg-zinc-900/50 border border-[var(--border)] rounded-3xl p-8 md:p-10 shadow-xl">
           <form onSubmit={handleTrack} className="flex flex-col gap-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Kode Akses Pesanan</label>
+              <label className="block text-sm font-medium mb-2">{t('track.label')}</label>
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted)]" />
                 <input
@@ -89,7 +91,7 @@ export default function TrackOrder() {
               disabled={isLoading}
               className="w-full py-4 bg-[var(--foreground)] text-[var(--background)] rounded-xl font-medium hover:scale-[1.02] transition-transform shadow-lg disabled:opacity-70 disabled:hover:scale-100 flex justify-center"
             >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Cek Pesanan'}
+              {isLoading ? <><Loader2 className="w-5 h-5 animate-spin mr-2" /> {t('track.searching')}</> : t('track.submit')}
             </button>
           </form>
         </div>

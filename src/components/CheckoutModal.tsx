@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { PublicProduct } from '@/lib/types'
+import { useLanguage } from '@/context/LanguageProvider'
 
 export default function CheckoutModal({
   isOpen,
@@ -17,6 +18,7 @@ export default function CheckoutModal({
   const [step, setStep] = useState<'form' | 'processing' | 'success' | 'error'>('form')
   const [orderCode, setOrderCode] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
+  const { t } = useLanguage()
 
   if (!isOpen || !product) return null
 
@@ -101,18 +103,18 @@ export default function CheckoutModal({
         {step === 'form' && (
           <>
             <button onClick={handleClose} className="absolute top-6 right-6 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors text-3xl leading-none">&times;</button>
-            <h2 className="text-3xl font-bold tracking-tight mb-2">Checkout</h2>
-            <p className="text-[var(--muted)] mb-8">Secure your premium source code in one step.</p>
+            <h2 className="text-3xl font-bold tracking-tight mb-2">{t('checkout.title')}</h2>
+            <p className="text-[var(--muted)] mb-8">{t('checkout.subtitle')}</p>
             <div className="p-5 bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl border border-[var(--border)] mb-8 flex justify-between items-center">
               <div>
                 <h4 className="font-semibold text-lg">{product.title}</h4>
-                <p className="text-[var(--muted)] text-sm mt-1">Lifetime License</p>
+                <p className="text-[var(--muted)] text-sm mt-1">{t('checkout.lifetime')}</p>
               </div>
               <p className="font-bold text-xl">Rp {product.price.toLocaleString('id-ID')}</p>
             </div>
             <form onSubmit={handleCheckout} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Email Address</label>
+                <label className="block text-sm font-medium mb-2">{t('checkout.email_label')}</label>
                 <input
                   type="email"
                   required
@@ -121,10 +123,10 @@ export default function CheckoutModal({
                   placeholder="you@example.com"
                   className="w-full px-4 py-4 rounded-xl border border-[var(--border)] bg-transparent focus:outline-none focus:ring-2 focus:ring-[var(--foreground)] transition-shadow"
                 />
-                <p className="text-sm text-[var(--muted)] mt-2">Kode Akses & link download dikirim ke email ini.</p>
+                <p className="text-sm text-[var(--muted)] mt-2">{t('checkout.email_hint')}</p>
               </div>
               <button type="submit" className="w-full py-4 bg-[var(--foreground)] text-[var(--background)] rounded-xl font-medium hover:scale-[1.02] transition-transform shadow-lg">
-                Proceed to Payment
+                {t('checkout.proceed')}
               </button>
             </form>
           </>
@@ -137,8 +139,8 @@ export default function CheckoutModal({
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
             </svg>
-            <h2 className="text-2xl font-bold mb-2">Memproses Pembayaran...</h2>
-            <p className="text-[var(--muted)]">Mohon tunggu, jangan tutup halaman ini.</p>
+            <h2 className="text-2xl font-bold mb-2">{t('checkout.processing')}</h2>
+            <p className="text-[var(--muted)]">{t('checkout.processing_wait')}</p>
           </div>
         )}
 
@@ -148,10 +150,10 @@ export default function CheckoutModal({
             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
             </div>
-            <h2 className="text-3xl font-bold tracking-tight mb-4">Pembayaran Berhasil!</h2>
-            <p className="text-[var(--muted)] mb-8">Terima kasih! Cek email Anda untuk link download.</p>
+            <h2 className="text-3xl font-bold tracking-tight mb-4">{t('checkout.success')}</h2>
+            <p className="text-[var(--muted)] mb-8">{t('checkout.success_msg')}</p>
             <div className="p-6 bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl border border-[var(--border)] mb-8 text-left">
-              <p className="text-sm text-[var(--muted)] mb-1">Kode Akses Pesanan:</p>
+              <p className="text-sm text-[var(--muted)] mb-1">{t('checkout.code_label')}</p>
               <div className="flex items-center justify-between">
                 <p className="font-mono text-2xl font-bold tracking-wider">{orderCode}</p>
                 <button
@@ -162,11 +164,11 @@ export default function CheckoutModal({
                 </button>
               </div>
               <p className="text-sm text-amber-600 dark:text-amber-500 mt-4 bg-amber-50 dark:bg-amber-500/10 p-3 rounded-xl border border-amber-200 dark:border-amber-500/20">
-                ⚠️ <strong>Simpan kode ini!</strong> Anda memerlukan kode ini untuk melacak pesanan dan mengunduh produk.
+                ⚠️ {t('checkout.code_warning')}
               </p>
             </div>
             <button onClick={handleClose} className="w-full py-4 bg-[var(--foreground)] text-[var(--background)] rounded-xl font-medium hover:scale-[1.02] transition-transform shadow-lg">
-              Selesai
+              {t('checkout.done')}
             </button>
           </div>
         )}
@@ -177,10 +179,10 @@ export default function CheckoutModal({
             <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </div>
-            <h2 className="text-3xl font-bold tracking-tight mb-4">Gagal</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4">{t('checkout.failed')}</h2>
             <p className="text-[var(--muted)] mb-8">{errorMsg}</p>
             <button onClick={() => setStep('form')} className="w-full py-4 bg-[var(--foreground)] text-[var(--background)] rounded-xl font-medium hover:scale-[1.02] transition-transform shadow-lg">
-              Coba Lagi
+              {t('checkout.retry')}
             </button>
           </div>
         )}
