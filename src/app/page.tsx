@@ -106,16 +106,16 @@ export default function Home() {
           }}
         />
         {/* Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(100%_50%_at_50%_0%,rgba(120,115,106,0.3)_0,var(--background)_80%)]" />
+        <div className="absolute inset-0 -z-10 bg-[var(--background)]/70 dark:bg-[#09090b]/80 backdrop-blur-[1px] pointer-events-none" />
         
         <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border)] bg-white/50 dark:bg-black/50 backdrop-blur-sm text-sm text-[var(--muted)] mb-8 animate-fade-up">
             <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
             {t('hero.badge')}
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6 animate-fade-up">
-            {t('hero.title_1')}<br />
-            <span className="font-serif italic font-normal text-[var(--muted)]">{t('hero.title_2')}</span>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6 flex flex-col items-center">
+            <span className="animate-fade-left block leading-tight">{t('hero.title_1')}</span>
+            <span className="font-serif italic font-normal text-[var(--muted)] animate-fade-right block mt-2 leading-tight">{t('hero.title_2')}</span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-[var(--muted)] mb-10 animate-fade-up leading-relaxed">
             {t('hero.subtitle')}

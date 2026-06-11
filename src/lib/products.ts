@@ -19,23 +19,39 @@ export async function getProducts(): Promise<PublicProduct[]> {
 
 // Ambil satu produk berdasarkan slug
 export async function getProductBySlug(slug: string): Promise<PublicProduct | null> {
-  const { data, error } = await supabase
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')) {
+    return FALLBACK_PRODUCTS.find(p => p.slug === slug) || null
+  }
+
+  const timeoutPromise = new Promise<null>((_, reject) => {
+    setTimeout(() => reject(new Error('timeout')), 4500)
+  })
+
+  const fetchPromise = supabase
     .from('products')
     .select('id, title, slug, description, long_description, price, cover_image_url, preview_url, category, tech, views, sales, is_published, created_at')
     .eq('slug', slug)
     .eq('is_published', true)
     .single()
 
-  if (error) return null
+  try {
+    const response = await Promise.race([fetchPromise, timeoutPromise]) as { data: any, error: any }
+    const { data, error } = response
 
-  // Increment view count (fire and forget)
-  supabase
-    .from('products')
-    .update({ views: (data.views || 0) + 1 })
-    .eq('slug', slug)
-    .then(() => {})
+    if (error || !data) return null
 
-  return data
+    // Increment view count (fire and forget)
+    supabase
+      .from('products')
+      .update({ views: (data.views || 0) + 1 })
+      .eq('slug', slug)
+      .then(() => {})
+
+    return data
+  } catch (err) {
+    console.warn('Fetch product timed out or failed:', err)
+    return null
+  }
 }
 
 // Ambil daftar kategori unik
