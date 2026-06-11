@@ -1,57 +1,86 @@
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
-import { snap } from '@/lib/midtrans';
+import { NextResponse } from 'next/server'
+import { getServiceSupabase } from '@/lib/supabase'
+import { snap } from '@/lib/midtrans'
+import { checkoutSchema } from '@/lib/validations'
+import { generateOrderCode } from '@/lib/utils'
 
 export async function POST(req: Request) {
   try {
-    const { productId, email, title, price } = await req.json();
+    const body = await req.json()
 
-    // 1. Simpan order ke Supabase dengan status pending
-    // Asumsi: Tabel orders sudah dibuat dan RLS diizinkan untuk insert
-    const { data: order, error } = await supabase
+    // 1. Validasi input
+    const parsed = checkoutSchema.safeParse(body)
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.errors[0].message },
+        { status: 400 }
+      )
+    }
+
+    const { productId, email, title, price } = parsed.data
+    const db = getServiceSupabase()
+    const orderCode = generateOrderCode()
+
+    // 2. Verifikasi harga dari database (anti-tamper)
+    const { data: product } = await db
+      .from('products')
+      .select('id, price, title')
+      .eq('id', productId)
+      .single()
+
+    const verifiedPrice = product?.price || price
+    const verifiedTitle = product?.title || title
+
+    // 3. Simpan order ke Supabase
+    const { data: order, error: orderError } = await db
       .from('orders')
       .insert({
+        order_code: orderCode,
         customer_email: email,
-        product_id: productId, // Harus berupa UUID yang valid di database, kita mock sementara jika tidak ada
-        amount: price,
+        product_id: productId,
+        amount: verifiedPrice,
         status: 'pending'
       })
       .select()
-      .single();
+      .single()
 
-    let orderId = order?.id;
-
-    // Fallback jika database belum disetup (untuk keperluan demo UI)
-    if (error || !orderId) {
-      console.warn("Supabase insert error (mungkin tabel belum dibuat). Menggunakan mock UUID.", error);
-      orderId = 'order-' + Math.random().toString(36).substring(7) + '-' + Date.now();
+    if (orderError || !order) {
+      console.error('Order insert error:', orderError)
+      return NextResponse.json(
+        { error: 'Gagal membuat pesanan. Silakan coba lagi.' },
+        { status: 500 }
+      )
     }
 
-    // 2. Buat Transaksi di Midtrans
+    // 4. Buat Transaksi Midtrans Snap
     const parameter = {
       transaction_details: {
-        order_id: orderId,
-        gross_amount: price
+        order_id: order.id,
+        gross_amount: verifiedPrice
       },
       customer_details: {
         email: email
       },
       item_details: [{
-        id: String(productId),
-        price: price,
+        id: productId,
+        price: verifiedPrice,
         quantity: 1,
-        name: title.substring(0, 50) // Midtrans limit
+        name: verifiedTitle.substring(0, 50)
       }]
-    };
+    }
 
-    const transaction = await snap.createTransaction(parameter);
+    const transaction = await snap.createTransaction(parameter)
 
     return NextResponse.json({
       token: transaction.token,
-      redirect_url: transaction.redirect_url
-    });
+      redirect_url: transaction.redirect_url,
+      order_code: orderCode
+    })
   } catch (error: any) {
-    console.error("Checkout Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Checkout Error:', error)
+    return NextResponse.json(
+      { error: 'Terjadi kesalahan sistem. Silakan coba lagi.' },
+      { status: 500 }
+    )
   }
 }
