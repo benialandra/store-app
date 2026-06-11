@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Script from "next/script";
+import SecurityGuard from "@/components/SecurityGuard";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
-  title: "Art Gallery E-Commerce",
-  description: "Exclusive digital artworks for your creative projects.",
+  title: "DevStore | Premium Code Scripts & Templates",
+  description: "Supercharge your workflow with high-quality, production-ready code.",
 };
 
 export default function RootLayout({
@@ -17,7 +21,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable}`}>{children}</body>
+      <body className={`${inter.variable} ${playfair.variable}`}>
+        <SecurityGuard />
+        <Navbar />
+        {children}
+        <Footer />
+        <Script 
+          src="https://app.sandbox.midtrans.com/snap/snap.js" 
+          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || 'SB-Mid-client-YOUR_CLIENT_KEY_HERE'}
+          strategy="lazyOnload"
+        />
+      </body>
     </html>
   );
 }
