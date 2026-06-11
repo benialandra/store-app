@@ -14,23 +14,30 @@ export const metadata: Metadata = {
   description: "Supercharge your workflow with high-quality, production-ready code.",
 };
 
+import { ThemeProvider } from "@/context/ThemeProvider";
+import { LanguageProvider } from "@/context/LanguageProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable}`}>
-        <SecurityGuard />
-        <Navbar />
-        {children}
-        <Footer />
-        <Script 
-          src="https://app.sandbox.midtrans.com/snap/snap.js" 
-          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || 'SB-Mid-client-YOUR_CLIENT_KEY_HERE'}
-          strategy="lazyOnload"
-        />
+        <ThemeProvider>
+          <LanguageProvider>
+            <SecurityGuard />
+            <Navbar />
+            {children}
+            <Footer />
+            <Script 
+              src="https://app.sandbox.midtrans.com/snap/snap.js" 
+              data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || 'SB-Mid-client-YOUR_CLIENT_KEY_HERE'}
+              strategy="lazyOnload"
+            />
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
