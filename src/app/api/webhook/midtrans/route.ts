@@ -62,15 +62,16 @@ export async function POST(req: Request) {
             const productTitle = order.products?.title || 'Premium Script'
 
             // Increment sales count
-            await db.rpc('increment_sales', { product_uuid: order.product_id })
-              .then(() => {})
-              .catch(() => {
-                // Fallback: manual update jika RPC belum ada
-                db.from('products')
+            try {
+              await db.rpc('increment_sales', { product_uuid: order.product_id })
+            } catch {
+              // Fallback: manual update jika RPC belum ada
+              try {
+                await db.from('products')
                   .update({ sales: (order.products as any)?.sales ? (order.products as any).sales + 1 : 1 })
                   .eq('id', order.product_id)
-                  .then(() => {})
-              })
+              } catch {}
+            }
 
             await sendEmail(
               order.customer_email,

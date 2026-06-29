@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const parsed = trackOrderSchema.safeParse(body)
     if (!parsed.success) {
       return NextResponse.json(
-        { error: parsed.error.errors[0].message },
+        { error: parsed.error.issues[0].message },
         { status: 400 }
       )
     }
