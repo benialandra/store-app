@@ -25,20 +25,38 @@ export default function AdminPage() {
   const [saveLoading, setSaveLoading] = useState(false)
   const [stats, setStats] = useState({ totalProducts: 0, totalSales: 0, totalViews: 0, totalRevenue: 0 })
 
-  // Simple password check (production → gunakan Supabase Auth)
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const adminPw = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'benialandra2025'
-    if (password === adminPw) {
-      setIsAuthed(true)
-      localStorage.setItem('admin_auth', 'true')
-    } else {
-      alert('Password salah!')
+    setIsLoading(true)
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setIsAuthed(true)
+      } else {
+        alert(data.error || 'Password salah!')
+      }
+    } catch {
+      alert('Gagal menghubungi server.')
     }
+    setIsLoading(false)
   }
 
   useEffect(() => {
-    if (localStorage.getItem('admin_auth') === 'true') setIsAuthed(true)
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/admin/check')
+        const data = await res.json()
+        if (data.authorized) {
+          setIsAuthed(true)
+        }
+      } catch {}
+    }
+    checkAuth()
   }, [])
 
   useEffect(() => {
@@ -128,7 +146,7 @@ export default function AdminPage() {
             <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
             <p className="text-[var(--muted)] mt-1">Kelola produk dan pantau penjualan.</p>
           </div>
-          <button onClick={() => { localStorage.removeItem('admin_auth'); setIsAuthed(false) }} className="px-4 py-2 text-sm border border-[var(--border)] rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+          <button onClick={async () => { await fetch('/api/admin/logout', { method: 'POST' }); setIsAuthed(false) }} className="px-4 py-2 text-sm border border-[var(--border)] rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
             Logout
           </button>
         </div>
